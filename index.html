@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <title>Vue Async Example</title>
+</head>
+<body>
+    <div id="app">
+        <button @click="fetchDataCallback">Fetch with Callback</button>
+        <button @click="fetchDataPromise">Fetch with Promise</button>
+        <button @click="fetchDataAsyncAwait">Fetch with Async/Await</button>
+        <p>{{ message }}</p>
+    </div>
+
+    <script>
+        const { createApp, ref } = Vue;
+
+        createApp({
+            setup() {
+                const message = ref("Click a button to fetch data");
+
+                function fetchDataCallback(callback) {
+                    setTimeout(() => {
+                        message.value = "Data fetched using Callback";
+                        callback();
+                    }, 2000);
+                }
+
+                function fetchDataPromise() {
+                    new Promise((resolve) => {
+                        setTimeout(() => {
+                            message.value = "Data fetched using Promise";
+                            resolve();
+                        }, 2000);
+                    });
+                }
+
+                async function fetchDataAsyncAwait() {
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    message.value = "Data fetched using Async/Await";
+                }
+
+                return {
+                    message,
+                    fetchDataCallback: () => fetchDataCallback(() => console.log("Callback Done!")),
+                    fetchDataPromise,
+                    fetchDataAsyncAwait
+                };
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
